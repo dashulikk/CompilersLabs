@@ -1,33 +1,41 @@
-/* Define the state type */
-type state = { name: string }
+/* Super Simplified Automaton Simulation in Tiger */
 
-/* Function to handle transitions */
-function transition(s: state, input: string): state =
-    if s.name = "q0" then
-        if input = "a" then
-            s
-        else if input = "b" then
-            state{name="q1"}
-        else
-            state{name="error"}  /* Replacing error function call */
-    else if s.name = "q1" then
-        if input = "b" then
-            s
-        else
-            state{name="error"}  /* Replacing error function call */
-    else
-        state{name="error"}  /* Covering unexpected states */
-
-/* Main function */
 let
-    var automaton_state := state{name="q0"}
-in
-    automaton_state := transition(automaton_state, "a");
-    automaton_state := transition(automaton_state, "a");
-    automaton_state := transition(automaton_state, "b");
-    automaton_state := transition(automaton_state, "b");
+    /* Variable declaration for the state */
+    var automaton_state := "q0"
 
-    print("Final state: ");
-    print(automaton_state.name);
-    print("\n");
+    /* Begin execution section */
+in
+    /* Simulate transition for input 'a' */
+    (
+        (if automaton_state = "q0" then
+            automaton_state := "q0"
+         else
+            automaton_state := "error"); /* exp1 */
+
+    /* Simulate transition for another input 'a' */
+        (if automaton_state = "q0" then
+            automaton_state := "q0"
+        else
+            automaton_state := "error");
+        (
+            if automaton_state = "q0" then
+                automaton_state := "q1"
+            else
+                automaton_state := "error"
+        );
+        (
+             /* Simulate transition for another input 'b' */
+            if automaton_state = "q1" then
+                automaton_state := "q1"
+             else
+                automaton_state := "error"
+        );
+        /* Output the final state of the automaton */
+        print("Final state: ");
+        print(automaton_state);
+        print("\n")
+    )
 end
+
+
