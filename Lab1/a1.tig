@@ -1,0 +1,33 @@
+/* Define the state type */
+type state = { name: string }
+
+/* Function to handle transitions */
+function transition(s: state, input: string): state =
+    if s.name = "q0" then
+        if input = "a" then
+            s
+        else if input = "b" then
+            state{name="q1"}
+        else
+            state{name="error"}  /* Replacing error function call */
+    else if s.name = "q1" then
+        if input = "b" then
+            s
+        else
+            state{name="error"}  /* Replacing error function call */
+    else
+        state{name="error"}  /* Covering unexpected states */
+
+/* Main function */
+let
+    var automaton_state := state{name="q0"}
+in
+    automaton_state := transition(automaton_state, "a");
+    automaton_state := transition(automaton_state, "a");
+    automaton_state := transition(automaton_state, "b");
+    automaton_state := transition(automaton_state, "b");
+
+    print("Final state: ");
+    print(automaton_state.name);
+    print("\n");
+end

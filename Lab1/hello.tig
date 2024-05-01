@@ -1,0 +1,7 @@
+let
+
+    function main() =
+        print("Hello World!\n")
+in
+    main()
+end
