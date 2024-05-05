@@ -27,9 +27,11 @@ blank           [ \t\f]
 id              [a-zA-Z][_0-9a-zA-Z]*
 int             [0-9]+
 
+
  /* Declare two start conditions (sub-automate states) to handle
-    strings and comments */
+ strings and comments */
 %x STRING
+
 %x COMMENT
 
 %{
@@ -86,13 +88,13 @@ break    return yy::tiger_parser::make_BREAK(loc);
 function return yy::tiger_parser::make_FUNCTION(loc);
 var      return yy::tiger_parser::make_VAR(loc);
 
+
  /* Identifiers */
 {id}       return yy::tiger_parser::make_ID(Symbol(yytext), loc);
 
-/* Integers */
-{int}      if((strtol(yytext,NULL,10) < TIGER_INT_MAX) & (strtol(yytext,NULL,10) > TIGER_INT_MIN))
-{ return yy::tiger_parser::make_INT(strtol(yytext,NULL,10), loc);} 
-else {utils::error (loc, "invalid integer");}
+ /* Integers */
+{int}      if((strtol(yytext,NULL,10) < TIGER_INT_MAX) & (strtol(yytext,NULL,10) > TIGER_INT_MIN)){ return yy::tiger_parser::make_INT(strtol(yytext,NULL,10), loc);} else {utils::error (loc, "invalid integer");}
+
 
  /* Strings */
 \" {BEGIN(STRING); string_buffer.clear();}
@@ -124,9 +126,7 @@ else {utils::error (loc, "invalid integer");}
     /* All other characters are accepted */
     . {string_buffer.push_back(yytext[0]);}
 }
-
  /* Comments */
-
 "/*"     {comment_depth = 1; BEGIN(COMMENT);}
 <COMMENT>{
    /* Increase cursor line position for each new line */
