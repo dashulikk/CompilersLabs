@@ -9,6 +9,7 @@
 #include "../utils/errors.hh"
 
 #define TIGER_INT_MAX  2147483647  /*  2^31 - 1 */
+#define TIGER_INT_MIN -2147483648  /* -2^31 */
 
 # undef yywrap
 # define yywrap() 1
@@ -24,6 +25,7 @@ static std::string string_buffer;
 lineterminator  \r|\n|\r\n
 blank           [ \t\f]
 id              [a-zA-Z][_0-9a-zA-Z]*
+int             [0-9]+
 
  /* Declare two start conditions (sub-automate states) to handle
     strings and comments */
@@ -86,6 +88,11 @@ var      return yy::tiger_parser::make_VAR(loc);
 
  /* Identifiers */
 {id}       return yy::tiger_parser::make_ID(Symbol(yytext), loc);
+
+/* Integers */
+{int}      if((strtol(yytext,NULL,10) < TIGER_INT_MAX) & (strtol(yytext,NULL,10) > TIGER_INT_MIN))
+{ return yy::tiger_parser::make_INT(strtol(yytext,NULL,10), loc);} 
+else {utils::error (loc, "invalid integer");}
 
  /* Strings */
 \" {BEGIN(STRING); string_buffer.clear();}
