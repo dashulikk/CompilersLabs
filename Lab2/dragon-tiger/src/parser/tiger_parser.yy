@@ -90,7 +90,7 @@ using utils::nl;
 %type <Decl *> decl funcDecl varDecl;
 %type <std::vector<Decl *>> decls;
 %type <Expr *> expr stringExpr intExpr seqExpr callExpr opExpr negExpr
-            assignExpr whileExpr forExpr breakExpr letExpr var;
+            assignExpr whileExpr forExpr breakExpr letExpr var ifExpr;
 
 %type <std::vector<Expr *>> exprs nonemptyexprs;
 %type <std::vector<Expr *>> arguments nonemptyarguments;
@@ -134,6 +134,7 @@ expr: stringExpr { $$ = $1; }
    | forExpr { $$ = $1; }
    | breakExpr { $$ = $1; }
    | letExpr { $$ = $1; }
+   | ifExpr { $$ = $1; }
 ;
 
 varDecl: VAR ID typeannotation ASSIGN expr
@@ -216,6 +217,9 @@ seqExpr : LPAREN exprs RPAREN { $$ = new Sequence(@1, $2); }
 exprs: { $$ = std::vector<Expr *>(); }
   | nonemptyexprs { $$ = $1; }
 ;
+ifExpr: IF expr THEN expr ELSE expr { $$ = new IfThenElse(@1, $2, $4, $6); }
+  | IF expr THEN expr 
+  { $$ = new IfThenElse(@1, $2, $4, new Sequence(nl, std::vector<Expr *>() )); }
 
 nonemptyexprs: expr { $$ = std::vector<Expr *>({$1}); }
   | nonemptyexprs SEMICOLON expr

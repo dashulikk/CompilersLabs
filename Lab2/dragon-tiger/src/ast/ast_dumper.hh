@@ -1,4 +1,4 @@
-#ifndef AST_DUMPER_HH
+ #ifndef AST_DUMPER_HH
 #define AST_DUMPER_HH
 
 #include <ostream>
